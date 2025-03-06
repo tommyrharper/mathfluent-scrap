@@ -25,6 +25,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onCapt
   const clearCanvas = () => {
     if (excalidrawAPI) {
       excalidrawAPI.resetScene();
+      excalidrawAPI.setActiveTool({ type: "freedraw" });
       onClear?.();
     }
   };
@@ -57,18 +58,33 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onCapt
     <div className="fixed inset-0">
       <Excalidraw
         theme='light'
-        excalidrawAPI={(api) => setExcalidrawAPI(api)}
+        excalidrawAPI={(api) => {
+          setExcalidrawAPI(api);
+          api.setActiveTool({ type: "freedraw" });
+        }}
         initialData={{
           appState: {
             viewBackgroundColor: '#ffffff',
             theme: 'light',
-            activeTool: { type: "freedraw", customType: null, locked: false, lastActiveTool: null },
-            zenMode: true
+            currentItemStrokeColor: '#000000',
+            currentItemStrokeWidth: 2,
+            activeTool: { type: "freedraw" }
           },
         }}
         UIOptions={{
           tools: {
+            selection: false,
+            rectangle: false,
+            diamond: false,
+            ellipse: false,
+            arrow: false,
+            line: false,
+            text: false,
+            eraser: false,
+            frame: false,
             image: false,
+            laser: false,
+            hand: false,
           },
           canvasActions: {
             export: false,
