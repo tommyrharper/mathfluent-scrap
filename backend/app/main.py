@@ -6,6 +6,7 @@ import logging
 from dotenv import load_dotenv
 import random
 from openai import OpenAI
+import base64
 
 # Load environment variables
 load_dotenv()
@@ -50,6 +51,23 @@ class SubmitResultsRequest(BaseModel):
     is_correct: list[bool]
 
 
+def debug_image(image: str):
+    # Save image to disk for debugging
+    # Create debug directory if it doesn't exist
+    os.makedirs("debug_images", exist_ok=True)
+    
+    # Extract base64 data
+    if image.startswith('data:image'):
+        base64_data = image.split('base64,')[1]
+    else:
+        base64_data = image
+        
+    # Save to file
+    image_path = f"debug_images/answer_{len(os.listdir('debug_images'))}.png"
+    with open(image_path, "wb") as f:
+        f.write(base64.b64decode(base64_data))
+    logger.info(f"Saved debug image to {image_path}")
+
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to MathFluent API"}
@@ -67,19 +85,19 @@ async def check_answer(request: ImageRequest):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "user",
                     "content": [
                         {
-                            "type": "text",
-                            "text": f"For the math question '{request.question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters.",
+                            "type": "image_url",
+                            "image_url": {"url": request.image, "detail": "high"},
                         },
                         {
-                            "type": "image_url",
-                            "image_url": {"url": request.image, "detail": "low"},
-                        },
+                            "type": "text",
+                            "text": f"For the math question '{request.question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters.",
+                        }
                     ],
                 }
             ],
@@ -90,7 +108,6 @@ async def check_answer(request: ImageRequest):
         logger.info(f"OpenAI response: {result}")
         is_correct = result == "1"
 
-        logger.info(f"OpenAI response: {result}")
         return AnswerResponse(is_correct=is_correct)
 
     except Exception as e:
