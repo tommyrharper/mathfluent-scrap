@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import base64
 from anthropic import Anthropic
+from datasets import Dataset
 
 # Load environment variables
 load_dotenv()
@@ -180,15 +181,34 @@ async def check_answer(request: ImageRequest):
 @app.post("/submit-results")
 async def submit_results(request: SubmitResultsRequest):
     """
-    Endpoint to submit final results. Currently logs the submission.
-    In the future, this would upload to Hugging Face.
+    Endpoint to submit final results and upload to Hugging Face dataset.
     """
     logger.info("Received results submission")
     logger.info(f"Number of questions: {len(request.questions)}")
     logger.info(f"Number of answers: {len(request.answers)}")
     logger.info(f"Correctness: {request.is_correct}")
 
-    # Mock Hugging Face upload simulation
-    logger.info("Simulating Hugging Face upload...")
-
-    return {"message": "Results submitted successfully"}
+    try:
+        # Create a dataset dictionary
+        dataset_dict = {
+            "questions": request.questions,
+            "answers": request.answers,
+            "is_correct": request.is_correct,
+        }
+        
+        # Create a Dataset object
+        dataset = Dataset.from_dict(dataset_dict)
+        
+        # Push to Hugging Face Hub
+        dataset.push_to_hub(
+            "zeroknowledgeltd/mathfluent",
+            token=os.getenv("HUGGINGFACE_TOKEN"),
+            split="train"
+        )
+        
+        logger.info("Successfully uploaded to Hugging Face dataset")
+        return {"message": "Results submitted and uploaded successfully"}
+    
+    except Exception as e:
+        logger.error(f"Error uploading to Hugging Face: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error uploading results to dataset")
