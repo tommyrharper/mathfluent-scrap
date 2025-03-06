@@ -15,6 +15,7 @@ export default function Questions() {
   const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
 
   const questions = ["sin(2θ) = ?", "cos(2θ) = ?", "tan(2θ) = ?"];
+  // const questions = ["3x - 5a = 10a", "x^2 = 9a^2", "e^x = a"];
 
   const handleImageCapture = async (imageData: string) => {
     setIsSubmitting(true);
@@ -69,10 +70,6 @@ export default function Questions() {
     }
   };
 
-  const clearCanvas = () => {
-    // Implementation of clearCanvas function
-  };
-
   const handleSubmit = () => {
     if (!isSubmitting) {
       canvasRef.current?.submit();
@@ -92,7 +89,6 @@ export default function Questions() {
         <DrawingCanvas
           ref={canvasRef}
           onCapture={handleImageCapture}
-          onClear={clearCanvas}
           question={questions[questionIndex]}
           questionNumber={questionIndex + 1}
           isSubmitting={isSubmitting}

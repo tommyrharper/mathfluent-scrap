@@ -104,6 +104,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
           </MainMenu>
           <div className="absolute top-28 left-1/2 transform -translate-x-1/2 z-10 bg-zinc-900/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg border border-zinc-800">
             <h2 className="text-xl font-semibold text-center text-zinc-100">
+              {/* Solve for x: Question {questionNumber} */}
               Question {questionNumber}
             </h2>
             <div className="text-2xl mt-2 text-zinc-100">
