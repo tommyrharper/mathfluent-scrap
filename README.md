@@ -8,9 +8,14 @@ A responsive math learning application with a "Question → Question" workflow f
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [How to Use](#how-to-use)
-- [License](#license)
+- [MathFluent ](#mathfluent-)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [How to Use](#how-to-use)
+    - [Development](#development)
+    - [Production](#production)
+  - [License](#license)
+  - [PWA Development](#pwa-development)
 
 ## Overview
 
@@ -53,6 +58,20 @@ Build and run with Docker:
 docker-compose -f docker-compose.prod.yml up
 ```
 
+## PWA Development
+
+The app is configured as a Progressive Web App (PWA). PWA features are disabled during development to prevent caching issues and ensure hot reloading works correctly.
+
+To test PWA features:
+```bash
+npm run build
+npm start
+```
+
+Access the production build at `http://your-ip:3000` on your mobile device to test PWA functionality like "Add to Home Screen".
+
+
 ## License
 
 MIT © MathFluent
+
