@@ -11,7 +11,6 @@ interface DrawingCanvasProps {
   onClear?: () => void;
   question: string;
   questionNumber: number;
-  isSubmitting: boolean;
 }
 
 export interface DrawingCanvasRef {
@@ -20,7 +19,7 @@ export interface DrawingCanvasRef {
 }
 
 const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
-  ({ onCapture, onClear, question, questionNumber, isSubmitting }, ref) => {
+  ({ onCapture, onClear, question, questionNumber }, ref) => {
     const router = useRouter();
     const [excalidrawAPI, setExcalidrawAPI] =
       React.useState<ExcalidrawImperativeAPI | null>(null);
@@ -104,7 +103,6 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
           </MainMenu>
           <div className="absolute top-28 left-1/2 transform -translate-x-1/2 z-10 bg-zinc-900/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg border border-zinc-800">
             <h2 className="text-xl font-semibold text-center text-zinc-100">
-              {/* Solve for x: Question {questionNumber} */}
               Question {questionNumber}
             </h2>
             <div className="text-2xl mt-2 text-zinc-100">
@@ -114,16 +112,14 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
               <button
                 onClick={clearCanvas}
                 className="px-4 py-2 bg-zinc-800 text-zinc-100 rounded-md hover:bg-zinc-700 transition-colors"
-                disabled={isSubmitting}
               >
                 Clear
               </button>
               <button
                 onClick={handleCapture}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                Submit
               </button>
             </div>
           </div>
