@@ -14,8 +14,8 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const questions = [
-    'sin(2θ) = ?',
-    'cos(2θ) = ?'
+    'sin(2θ) = \\, \\, ?',
+    'cos(2θ) = \\, \\, ?'
   ];
 
   const handleImageCapture = async (imageData: string) => {
