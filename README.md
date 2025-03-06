@@ -42,6 +42,7 @@ MathFluent is a full-stack application built with Next.js and FastAPI that allow
    # Install dependencies
    # Run the server
    uvicorn app.main:app --reload
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload # to run on local_ip:8000
    ```
    Backend will be available at http://localhost:8000
 
