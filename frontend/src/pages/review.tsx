@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import { API_BASE_URL } from '@/config';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import { API_BASE_URL } from "@/config";
 
 interface ReviewProps {
   questions: string[];
@@ -19,16 +19,16 @@ export default function Review() {
   useEffect(() => {
     if (router.isReady) {
       const { questions, answers, isCorrect } = router.query;
-      
+
       // Convert query parameters to proper types
       const parsedData: ReviewProps = {
         questions: Array.isArray(questions) ? questions : [questions as string],
         answers: Array.isArray(answers) ? answers : [answers as string],
-        isCorrect: Array.isArray(isCorrect) 
-          ? isCorrect.map(val => val === 'true')
-          : [isCorrect === 'true']
+        isCorrect: Array.isArray(isCorrect)
+          ? isCorrect.map((val) => val === "true")
+          : [isCorrect === "true"],
       };
-      
+
       setReviewData(parsedData);
       setConfirmations(parsedData.isCorrect);
     }
@@ -37,25 +37,25 @@ export default function Review() {
   const handleSubmit = async () => {
     if (isSubmitting || !reviewData) return;
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/submit-results`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           questions: reviewData.questions,
           answers: reviewData.answers,
-          is_correct: confirmations
-        })
+          is_correct: confirmations,
+        }),
       });
 
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
-      
-      router.push('/');
+
+      router.push("/");
     } catch (error) {
-      console.error('Error submitting results:', error);
+      console.error("Error submitting results:", error);
       setIsSubmitting(false);
     }
   };
@@ -95,11 +95,19 @@ export default function Review() {
               <tr key={index} className="border-t">
                 <td className="p-2">{question}</td>
                 <td className="p-2">
-                  <img src={reviewData.answers[index]} alt={`Answer ${index + 1}`} className="w-24 h-24 object-contain" />
+                  <img
+                    src={reviewData.answers[index]}
+                    alt={`Answer ${index + 1}`}
+                    className="w-24 h-24 object-contain"
+                  />
                 </td>
                 <td className="p-2">
-                  <span className={confirmations[index] ? 'text-green-600' : 'text-red-600'}>
-                    {confirmations[index] ? '✓' : '✗'}
+                  <span
+                    className={
+                      confirmations[index] ? "text-green-600" : "text-red-600"
+                    }
+                  >
+                    {confirmations[index] ? "✓" : "✗"}
                   </span>
                 </td>
                 <td className="p-2">
@@ -119,12 +127,12 @@ export default function Review() {
           onClick={handleSubmit}
           disabled={isSubmitting}
           className={`${
-            isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+            isSubmitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
           } text-white px-4 py-2 rounded transition-colors`}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Results'}
+          {isSubmitting ? "Submitting..." : "Submit Results"}
         </button>
       </div>
     </>
   );
-} 
+}
