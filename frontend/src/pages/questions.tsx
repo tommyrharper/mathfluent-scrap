@@ -14,7 +14,7 @@ export default function Questions() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
 
-  const questions = ["sin(2θ) = ?", "cos(2θ) = ?"];
+  const questions = ["sin(2θ) = ?", "cos(2θ) = ?", "tan(2θ) = ?"];
 
   const handleImageCapture = async (imageData: string) => {
     setIsSubmitting(true);
