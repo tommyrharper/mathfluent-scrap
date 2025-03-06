@@ -1,7 +1,7 @@
 'use client';
 
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { Excalidraw, exportToBlob } from "@excalidraw/excalidraw";
+import { Excalidraw, MainMenu, exportToBlob } from "@excalidraw/excalidraw";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 
 interface DrawingCanvasProps {
@@ -84,7 +84,13 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onCapt
             clearCanvas: false,
           }
         }}
-      />
+      >
+          <MainMenu>
+            <MainMenu.Item onSelect={() => window.alert("Needs implementing")}>
+              Home
+            </MainMenu.Item>
+          </MainMenu>
+      </Excalidraw>
     </div>
   );
 });
