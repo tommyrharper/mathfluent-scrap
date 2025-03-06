@@ -4,6 +4,7 @@ import Head from "next/head";
 import { API_BASE_URL } from "@/config";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import Link from "next/link";
+import { Switch } from "@/components/ui/switch";
 
 interface ReviewProps {
   questions: string[];
@@ -116,11 +117,10 @@ export default function Review() {
                     </span>
                   </td>
                   <td className="p-4">
-                    <input
-                      type="checkbox"
+                    <Switch
+                      id={`toggle-${index}`}
                       checked={confirmations[index]}
-                      onChange={() => toggleConfirmation(index)}
-                      className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 text-blue-500 focus:ring-blue-500"
+                      setChecked={(checked: boolean) => toggleConfirmation(index)}
                       disabled={isSubmitting}
                     />
                   </td>
