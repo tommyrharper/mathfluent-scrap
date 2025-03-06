@@ -43,6 +43,11 @@ class ImageRequest(BaseModel):
 class AnswerResponse(BaseModel):
     is_correct: bool
 
+class SubmitResultsRequest(BaseModel):
+    questions: list[str]
+    answers: list[str]
+    is_correct: list[bool]
+
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to MathFluent API"}
@@ -57,4 +62,20 @@ async def check_answer(request: ImageRequest):
     logger.info(f"Image data length: {len(request.image) if request.image else 0} characters")
     
     # Always return true for the mock implementation
-    return AnswerResponse(is_correct=True) 
+    return AnswerResponse(is_correct=True)
+
+@app.post("/submit-results")
+async def submit_results(request: SubmitResultsRequest):
+    """
+    Endpoint to submit final results. Currently logs the submission.
+    In the future, this would upload to Hugging Face.
+    """
+    logger.info("Received results submission")
+    logger.info(f"Number of questions: {len(request.questions)}")
+    logger.info(f"Number of answers: {len(request.answers)}")
+    logger.info(f"Correctness: {request.is_correct}")
+    
+    # Mock Hugging Face upload simulation
+    logger.info("Simulating Hugging Face upload...")
+    
+    return {"message": "Results submitted successfully"} 

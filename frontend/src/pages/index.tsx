@@ -12,6 +12,8 @@ export default function Home() {
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
   
   const questions = [
     'sin(2θ) = \\, \\, ?',
@@ -40,13 +42,22 @@ export default function Home() {
       const data = await response.json();
       console.log('Response data:', data);
       
-      // Move to next question or show completion
+      // Store answer and result
+      setAnswers([...answers, imageData]);
+      setCorrectAnswers([...correctAnswers, data.correct]);
+      
       if (questionIndex < questions.length - 1) {
         setQuestionIndex(questionIndex + 1);
       } else {
-        // Show completion message
-        alert('Quiz completed! All answers submitted.');
-        setQuestionIndex(0);
+        // Navigate to review page with answers
+        router.push({
+          pathname: '/review',
+          query: {
+            questions: questions,
+            answers: [...answers, imageData],
+            isCorrect: [...correctAnswers, data.correct]
+          }
+        });
       }
     } catch (error) {
       console.error('Error submitting answer:', error);
