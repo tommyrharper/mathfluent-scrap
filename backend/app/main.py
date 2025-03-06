@@ -73,6 +73,36 @@ async def read_root():
     return {"message": "Welcome to MathFluent API"}
 
 
+async def query_openai_vision(image: str, question: str) -> str:
+    """
+    Query OpenAI's vision model to check a handwritten math answer.
+    Returns "1" for correct answers and "0" for incorrect answers.
+    """
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": image, "detail": "high"},
+                        },
+                        {
+                            "type": "text",
+                            "text": f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters.",
+                        }
+                    ],
+                }
+            ],
+            max_tokens=10,
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        logger.error(f"Error in OpenAI vision query: {str(e)}")
+        raise
+
 @app.post("/check-answer", response_model=AnswerResponse)
 async def check_answer(request: ImageRequest):
     """
@@ -84,34 +114,14 @@ async def check_answer(request: ImageRequest):
     )
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": request.image, "detail": "high"},
-                        },
-                        {
-                            "type": "text",
-                            "text": f"For the math question '{request.question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters.",
-                        }
-                    ],
-                }
-            ],
-            max_tokens=10,
-        )
-
-        result = response.choices[0].message.content.strip()
+        result = await query_openai_vision(request.image, request.question)
         logger.info(f"OpenAI response: {result}")
         is_correct = result == "1"
 
         return AnswerResponse(is_correct=is_correct)
 
     except Exception as e:
-        logger.error(f"Error checking answer with OpenAI: {str(e)}")
+        logger.error(f"Error checking answer: {str(e)}")
         raise HTTPException(status_code=500, detail="Error checking answer")
 
 
