@@ -13,9 +13,12 @@ export default function Review() {
   const router = useRouter();
   const { questions, answers, isCorrect } = router.query as unknown as ReviewProps;
   const [confirmations, setConfirmations] = useState<boolean[]>(isCorrect || []);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
     try {
       const response = await fetch(`${API_BASE_URL}/submit-results`, {
         method: 'POST',
@@ -31,14 +34,11 @@ export default function Review() {
         throw new Error(`API request failed with status ${response.status}`);
       }
       
-      setIsSubmitted(true);
+      router.push('/');
     } catch (error) {
       console.error('Error submitting results:', error);
+      setIsSubmitting(false);
     }
-  };
-
-  const handlePlayAgain = () => {
-    router.push('/');
   };
 
   const toggleConfirmation = (index: number) => {
@@ -73,28 +73,22 @@ export default function Review() {
                   checked={confirmations[index]}
                   onChange={() => toggleConfirmation(index)}
                   className="w-4 h-4"
-                  disabled={isSubmitted}
+                  disabled={isSubmitting}
                 />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {!isSubmitted ? (
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Submit Results
-        </button>
-      ) : (
-        <button
-          onClick={handlePlayAgain}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Play Again
-        </button>
-      )}
+      <button
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        className={`${
+          isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+        } text-white px-4 py-2 rounded transition-colors`}
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit Results'}
+      </button>
     </div>
   );
 } 
