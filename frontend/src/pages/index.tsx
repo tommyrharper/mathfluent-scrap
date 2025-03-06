@@ -5,6 +5,9 @@ import { InlineMath } from 'react-katex';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import { useRouter } from 'next/router';
 
+// API base URL - use environment variable or default to localhost:8000
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 export default function Home() {
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -19,19 +22,23 @@ export default function Home() {
     setIsSubmitting(true);
     
     try {
-      console.log("Submitting answer...");
-      // For testing purposes, simulate API call with a delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      console.log("Submitting answer to backend...");
       
-      // In production, would call real API:
-      // const response = await fetch('/api/check-answer', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ image: imageData }),
-      // });
-      // const data = await response.json();
+      // Call the backend API with the correct URL
+      const response = await fetch(`${API_BASE_URL}/check-answer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageData }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Response data:', data);
       
       // Move to next question or show completion
       if (questionIndex < questions.length - 1) {

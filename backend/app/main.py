@@ -21,8 +21,11 @@ app = FastAPI(
 
 # Configure CORS
 origins = [
-    "http://localhost:3000",  # Dev frontend
-    "http://localhost",       # Prod frontend
+    "http://localhost:3000",     # Dev frontend
+    "http://localhost",          # Prod frontend
+    "http://127.0.0.1:3000",     # Alternative dev frontend
+    "http://127.0.0.1",          # Alternative prod frontend
+    "http://frontend:3000",      # Docker container name
 ]
 
 app.add_middleware(
@@ -51,6 +54,7 @@ async def check_answer(request: ImageRequest):
     In a real application, this would analyze the image.
     """
     logger.info("Received answer check request")
+    logger.info(f"Image data length: {len(request.image) if request.image else 0} characters")
     
     # Always return true for the mock implementation
     return AnswerResponse(is_correct=True) 
