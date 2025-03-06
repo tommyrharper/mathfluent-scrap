@@ -63,7 +63,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
     return (
       <div className="fixed inset-0">
         <Excalidraw
-          theme="light"
+          theme="dark"
           excalidrawAPI={(api) => {
             setExcalidrawAPI(api);
             api.setActiveTool({ 
@@ -74,7 +74,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
           initialData={{
             appState: {
               viewBackgroundColor: "#ffffff",
-              theme: "light",
+              theme: "dark",
               currentItemStrokeColor: "#000000",
               currentItemStrokeWidth: 2,
               activeTool: { 
