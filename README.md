@@ -1,8 +1,7 @@
 # MathFluent [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
-
 <p align="center">
-  <div style="background-color: #012c4e; width: 100%; padding: 20px; text-align: center;">
+  <div style="background: linear-gradient(to bottom, #012b4f, #052341); width: 100%; padding: 20px; text-align: center;">
     <img src="logo.webp" alt="MathFluent Logo" width="150" height="150">
   </div>
 </p>
