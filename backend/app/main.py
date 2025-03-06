@@ -5,6 +5,7 @@ import os
 import logging
 from dotenv import load_dotenv
 import random
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv()
@@ -12,6 +13,9 @@ load_dotenv()
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -32,6 +36,7 @@ app.add_middleware(
 # Pydantic models
 class ImageRequest(BaseModel):
     image: str  # base64 encoded image
+    question: str  # The question being answered
 
 class AnswerResponse(BaseModel):
     is_correct: bool
@@ -48,14 +53,45 @@ async def read_root():
 @app.post("/check-answer", response_model=AnswerResponse)
 async def check_answer(request: ImageRequest):
     """
-    Mock endpoint that always returns true for correctness.
-    In a real application, this would analyze the image.
+    Check answer using OpenAI's vision model.
     """
     logger.info("Received answer check request")
     logger.info(f"Image data length: {len(request.image) if request.image else 0} characters")
     
-    # Always return true for the mock implementation
-    return AnswerResponse(is_correct=random.choice([True, False]))
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": f"For the math question '{request.question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": request.image,
+                                "detail": "low"
+                            }
+                        }
+                    ]
+                }
+            ],
+            max_tokens=10
+        )
+        
+        result = response.choices[0].message.content.strip()
+        logger.info(f"OpenAI response: {result}")
+        is_correct = result == "1"
+        
+        logger.info(f"OpenAI response: {result}")
+        return AnswerResponse(is_correct=is_correct)
+        
+    except Exception as e:
+        logger.error(f"Error checking answer with OpenAI: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error checking answer")
 
 @app.post("/submit-results")
 async def submit_results(request: SubmitResultsRequest):

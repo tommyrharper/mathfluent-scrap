@@ -24,13 +24,15 @@ export default function Questions() {
     try {
       console.log("Submitting answer to backend...");
       
-      // Call the backend API with the correct URL
       const response = await fetch(`${API_BASE_URL}/check-answer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ image: imageData }),
+        body: JSON.stringify({ 
+          image: imageData,
+          question: questions[questionIndex]
+        }),
       });
       
       if (!response.ok) {
