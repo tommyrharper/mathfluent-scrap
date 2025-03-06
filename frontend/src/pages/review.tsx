@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { API_BASE_URL } from "@/config";
+import { BackgroundLines } from "@/components/ui/background-lines";
+import Link from "next/link";
 
 interface ReviewProps {
   questions: string[];
@@ -79,60 +81,75 @@ export default function Review() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Review Your Answers</h1>
-        <table className="w-full mb-4">
-          <thead>
-            <tr>
-              <th className="text-left p-2">Question</th>
-              <th className="text-left p-2">Answer</th>
-              <th className="text-left p-2">Correct</th>
-              <th className="text-left p-2">Confirm</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reviewData.questions.map((question, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-2">{question}</td>
-                <td className="p-2">
-                  <img
-                    src={reviewData.answers[index]}
-                    alt={`Answer ${index + 1}`}
-                    className="w-24 h-24 object-contain"
-                  />
-                </td>
-                <td className="p-2">
-                  <span
-                    className={
-                      confirmations[index] ? "text-green-600" : "text-red-600"
-                    }
-                  >
-                    {confirmations[index] ? "✓" : "✗"}
-                  </span>
-                </td>
-                <td className="p-2">
-                  <input
-                    type="checkbox"
-                    checked={confirmations[index]}
-                    onChange={() => toggleConfirmation(index)}
-                    className="w-4 h-4"
-                    disabled={isSubmitting}
-                  />
-                </td>
+      <BackgroundLines className="relative">
+        <div className="z-10 max-w-4xl mx-auto py-8 px-4">
+          <h2 className="bg-clip-text text-transparent text-center bg-gradient-to-b from-neutral-600 to-white text-4xl font-sans py-10 relative z-20 font-bold tracking-tight">
+            Review Your Answers
+          </h2>
+          <table className="w-full mb-4 bg-zinc-900/90 backdrop-blur-sm rounded-lg shadow-lg border border-zinc-800">
+            <thead>
+              <tr className="border-b border-zinc-800">
+                <th className="text-left p-4 text-zinc-100">Question</th>
+                <th className="text-left p-4 text-zinc-100">Answer</th>
+                <th className="text-left p-4 text-zinc-100">Correct</th>
+                <th className="text-left p-4 text-zinc-100">Confirm</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className={`${
-            isSubmitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-          } text-white px-4 py-2 rounded transition-colors`}
-        >
-          {isSubmitting ? "Submitting..." : "Submit Results"}
-        </button>
-      </div>
+            </thead>
+            <tbody>
+              {reviewData.questions.map((question, index) => (
+                <tr key={index} className="border-t border-zinc-800">
+                  <td className="p-4 text-zinc-100">{question}</td>
+                  <td className="p-4">
+                    <img
+                      src={reviewData.answers[index]}
+                      alt={`Answer ${index + 1}`}
+                      className="w-32 h-32 object-contain bg-zinc-800/50 rounded-lg p-2"
+                    />
+                  </td>
+                  <td className="p-4">
+                    <span
+                      className={
+                        confirmations[index] ? "text-green-400" : "text-red-400"
+                      }
+                    >
+                      {confirmations[index] ? "✓" : "✗"}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <input
+                      type="checkbox"
+                      checked={confirmations[index]}
+                      onChange={() => toggleConfirmation(index)}
+                      className="w-5 h-5 rounded border-zinc-600 bg-zinc-800 text-blue-500 focus:ring-blue-500"
+                      disabled={isSubmitting}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-8 text-center">
+            <button 
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-6 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                {isSubmitting ? "Submitting..." : "Submit Results"}
+              </span>
+            </button>
+
+            <Link href="/" className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-4">
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-6 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                Back to Home
+              </span>
+            </Link>
+          </div>
+        </div>
+      </BackgroundLines>
     </>
   );
 }
