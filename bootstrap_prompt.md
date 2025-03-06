@@ -22,6 +22,7 @@ Maintain the following structure in the README.md file:
 ## Tech Stack
 
 - **Next.js** PWA with TypeScript.
+  - Do not use server side rendering
 - **Tailwind CSS** for styling (modern, responsive design).
 - **React Query** for API state management.
 - **Jest** + **React Testing Library** for unit tests.
