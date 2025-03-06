@@ -1,0 +1,79 @@
+---
+description: Cursor Rule Formatting Guidelines
+globs: *.mdc
+alwaysApply: true
+---
+# Cursor Rule Formatting Guidelines
+
+Rule for ensuring proper formatting of cursor rules.
+
+<rule>
+name: cursor_rule_format
+description: Guidelines for proper cursor rule formatting
+
+filters:
+  - type: file_extension
+    pattern: "\\.mdc$"
+  - type: file_name
+    pattern: ".*\\.mdc$"
+  - type: content
+    pattern: "globs:"
+
+actions:
+  - type: suggest
+    message: |
+      ## Correct Cursor Rule Formatting
+
+      When creating cursor rules, follow these formatting guidelines:
+
+      ### Frontmatter
+      ```yaml
+      ---
+      description: Brief description of the rule
+      globs: *.py,*.js,*.ts
+      alwaysApply: true|false
+      ---
+      ```
+
+      ### Key Points:
+      - The `globs` field should NOT have quotes around the patterns
+      - Correct: `globs: *.py,*.js,*.ts`
+      - Incorrect: `globs: "*.py,*.js,*.ts"`
+      
+      ### Rule Structure
+      ```
+      <rule>
+      name: rule_name
+      description: Rule description
+      filters:
+        - type: file_extension
+          pattern: "\\.py$"
+      
+      actions:
+        - type: suggest
+          message: |
+            Your message here
+      </rule>
+      ```
+
+examples:
+  - input: |
+      # Bad: Quotes around globs
+      ---
+      description: Some rule
+      globs: "*.py,*.js"
+      alwaysApply: true
+      ---
+      
+      # Good: No quotes around globs
+      ---
+      description: Some rule
+      globs: *.py,*.js
+      alwaysApply: true
+      ---
+    output: "Correctly formatted cursor rule"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>
