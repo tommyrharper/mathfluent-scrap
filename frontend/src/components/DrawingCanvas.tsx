@@ -28,6 +28,8 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ onCapture }) => {
           exportWithDarkMode: false,
           exportBackground: true,
           viewBackgroundColor: '#ffffff',
+          gridMode: false,
+          zenMode: true
         },
       });
       
@@ -45,15 +47,21 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ onCapture }) => {
     <div className="flex flex-col items-center w-full max-w-3xl">
       <div className="w-[500px] h-[300px] border border-gray-300 rounded-lg bg-white">
         <Excalidraw
+          theme='light'
           excalidrawAPI={(api) => setExcalidrawAPI(api)}
           initialData={{
             appState: {
               viewBackgroundColor: '#ffffff',
               theme: 'light',
-              activeTool: { type: "freedraw" }
+              activeTool: { type: "freedraw" },
+              gridMode: false,
+              zenMode: true
             },
           }}
           UIOptions={{
+            tools: {
+              image: false,
+            },
             canvasActions: {
               export: false,
               loadScene: false,
