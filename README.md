@@ -28,6 +28,8 @@ MathFluent is a full-stack application built with Next.js and FastAPI that allow
    cd frontend
    npm install
    npm run dev
+   npm run dev -- -H 0.0.0.0 # make available on local_ip:3000 and 0.0.0.0:3000
+   ipconfig getifaddr en0 # get local machines ip, then use local_ip:3000 on ipad
    ```
    Frontend will be available at http://localhost:3000
 
