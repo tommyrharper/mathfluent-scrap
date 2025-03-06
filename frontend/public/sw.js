@@ -1,10 +1,6 @@
 const CACHE_NAME = 'mathfluent-v1';
-const urlsToCache = [
+const STATIC_ASSETS = [
   '/',
-  '/index.html',
-  '/questions',
-  '/review',
-  '/favicon.ico',
   '/site.webmanifest',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
@@ -13,22 +9,29 @@ const urlsToCache = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
+      .then((cache) => {
+        // Only cache the static assets initially
+        return cache.addAll(STATIC_ASSETS);
+      })
   );
 });
 
 self.addEventListener('fetch', (event) => {
+  // Skip cross-origin requests
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Cache hit - return response
         if (response) {
           return response;
         }
 
-        return fetch(event.request).then(
-          (response) => {
-            // Check if we received a valid response
+        return fetch(event.request)
+          .then((response) => {
+            // Don't cache if not a valid response
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
@@ -38,12 +41,21 @@ self.addEventListener('fetch', (event) => {
 
             caches.open(CACHE_NAME)
               .then((cache) => {
-                cache.put(event.request, responseToCache);
+                // Only cache GET requests
+                if (event.request.method === 'GET') {
+                  cache.put(event.request, responseToCache);
+                }
               });
 
             return response;
-          }
-        );
+          })
+          .catch(() => {
+            // Return a fallback response for navigation requests
+            if (event.request.mode === 'navigate') {
+              return caches.match('/');
+            }
+            return null;
+          });
       })
   );
 }); 

@@ -1,9 +1,44 @@
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  skipWaiting: true,
+  runtimeCaching: [
+    {
+      urlPattern: /^https?.*/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'offlineCache',
+        expiration: {
+          maxEntries: 200,
+          maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        },
+      },
+    },
+  ],
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
     domains: ['via.placeholder.com'],
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(webp)$/i,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            outputPath: 'static/images',
+            publicPath: '_next/static/images',
+          },
+        },
+      ],
+    });
+    return config;
   },
   headers: async () => {
     return [
@@ -28,13 +63,5 @@ const nextConfig = {
     ];
   },
 };
-
-// Only enable PWA in production
-const withPWA = process.env.NODE_ENV === 'production' 
-  ? require('next-pwa')({
-      dest: 'public',
-      disable: process.env.NODE_ENV === 'development',
-    })
-  : (config) => config;
 
 module.exports = withPWA(nextConfig); 
