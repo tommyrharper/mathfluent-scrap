@@ -4,9 +4,7 @@ import 'katex/dist/katex.min.css';
 import { InlineMath } from 'react-katex';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import { useRouter } from 'next/router';
-
-// API base URL - use environment variable or default to localhost:8000
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import { API_BASE_URL } from '@/config';
 
 export default function Questions() {
   const router = useRouter();
