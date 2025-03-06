@@ -1,0 +1,147 @@
+---
+description: Python Package Management with UV
+globs: requirements.txt, README.md, *.py
+alwaysApply: false
+---
+# Python Package Management with UV
+
+Rule for using UV for Python package management.
+
+<rule>
+name: python_uv_package_management
+description: Standards for using UV for Python package management
+filters:
+  - type: file_extension
+    pattern: "\\.py$"
+  - type: file_name
+    pattern: "pyproject\\.toml|requirements\\.txt|\\.python-version"
+  - type: event
+    pattern: "file_create|file_modify"
+
+actions:
+  - type: suggest
+    message: |
+      ## Overview
+
+      This project uses [UV](mdc:https:/github.com/astral-sh/uv) for Python package management instead of pip. UV is a fast, reliable Python package installer and resolver.
+
+      ## Setup
+
+      When setting up a new Python project or component:
+
+      1. Initialize UV in the repository:
+         ```bash
+         uv init .
+         ```
+
+      2. Edit the generated `pyproject.toml` with meaningful project information:
+         ```toml
+         [project]
+         name = "project_name"
+         version = "0.1.0"
+         description = "Meaningful description of the project"
+         readme = "README.md"
+         requires-python = "==3.10.*"
+         dependencies = []
+         ```
+
+      3. Create a `.python-version` file to specify the Python version:
+         ```bash
+         echo "3.10" > .python-version
+         ```
+
+      ## Adding Dependencies
+
+      To add dependencies:
+
+      ```bash
+      uv add package_name
+      ```
+
+      For development dependencies:
+
+      ```bash
+      uv add --dev package_name
+      ```
+
+      ## Locking Dependencies
+
+      After adding or updating dependencies:
+
+      ```bash
+      uv lock
+      ```
+
+      ## Installing Dependencies
+
+      To install dependencies from the lock file:
+
+      ```bash
+      uv sync
+      ```
+
+      ## Documentation
+
+      Always include the following in the project README:
+
+      ```markdown
+      ## Development Setup
+
+      This project uses UV for Python package management.
+
+      ### Prerequisites
+
+      - Python 3.10
+      - UV (`pip install uv`)
+
+      ### Installation
+
+      1. Clone the repository
+      2. Install dependencies:
+         ```bash
+         uv sync
+         ```
+
+      ### Adding Dependencies
+
+      ```bash
+      uv add package_name
+      uv lock
+      ```
+      ```
+
+      ## Migration from pip/requirements.txt
+
+      If migrating from a requirements.txt file:
+
+      1. Convert requirements to pyproject.toml:
+         ```bash
+         uv pip compile requirements.txt -o pyproject.toml
+         ```
+
+      2. Lock dependencies:
+         ```bash
+         uv lock
+         ```
+
+      3. Install dependencies:
+         ```bash
+         uv sync
+         ```
+
+examples:
+  - input: |
+      # Bad: Using pip for package management
+      pip install package_name
+      pip freeze > requirements.txt
+      
+      # Good: Using UV for package management
+      uv add package_name
+      uv lock
+      uv sync
+    output: "Correctly using UV for Python package management"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule> 
