@@ -97,24 +97,24 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
             },
           }}
         >
-          <div className="absolute top-28 left-1/2 transform -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold text-center">
+          <div className="absolute top-28 left-1/2 transform -translate-x-1/2 z-10 bg-zinc-900/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg border border-zinc-800">
+            <h2 className="text-xl font-semibold text-center text-zinc-100">
               Question {questionNumber}
             </h2>
-            <div className="text-2xl mt-2">
+            <div className="text-2xl mt-2 text-zinc-100">
               <InlineMath math={question} />
             </div>
             <div className="flex mt-4 space-x-4 justify-center">
               <button
                 onClick={clearCanvas}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                className="px-4 py-2 bg-zinc-800 text-zinc-100 rounded-md hover:bg-zinc-700 transition-colors"
                 disabled={isSubmitting}
               >
                 Clear
               </button>
               <button
                 onClick={handleCapture}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
