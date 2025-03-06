@@ -13,6 +13,7 @@ export default function Review() {
   const router = useRouter();
   const { questions, answers, isCorrect } = router.query as unknown as ReviewProps;
   const [confirmations, setConfirmations] = useState<boolean[]>(isCorrect || []);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async () => {
     try {
@@ -29,11 +30,15 @@ export default function Review() {
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
-
-      router.push('/complete');
+      
+      setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting results:', error);
     }
+  };
+
+  const handlePlayAgain = () => {
+    router.push('/');
   };
 
   const toggleConfirmation = (index: number) => {
@@ -68,18 +73,28 @@ export default function Review() {
                   checked={confirmations[index]}
                   onChange={() => toggleConfirmation(index)}
                   className="w-4 h-4"
+                  disabled={isSubmitted}
                 />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Submit Results
-      </button>
+      {!isSubmitted ? (
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Submit Results
+        </button>
+      ) : (
+        <button
+          onClick={handlePlayAgain}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Play Again
+        </button>
+      )}
     </div>
   );
 } 
