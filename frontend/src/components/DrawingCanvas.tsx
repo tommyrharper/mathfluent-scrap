@@ -73,18 +73,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onCapt
         }}
         UIOptions={{
           tools: {
-            selection: false,
-            rectangle: false,
-            diamond: false,
-            ellipse: false,
-            arrow: false,
-            line: false,
-            text: false,
-            eraser: false,
-            frame: false,
             image: false,
-            laser: false,
-            hand: false,
           },
           canvasActions: {
             export: false,
