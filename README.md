@@ -1,7 +1,7 @@
 # MathFluent [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 <p align="center">
-  <img src="https://via.placeholder.com/150?text=MathFluent" alt="MathFluent Logo" width="150" height="150">
+  <img src="logo.webp" alt="MathFluent Logo" width="150" height="150">
 </p>
 
 A responsive math learning application with a "Question → Question" workflow for math questions.
