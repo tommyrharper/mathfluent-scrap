@@ -21,6 +21,11 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ onCapture }) => {
         context.lineWidth = 3;
         context.lineCap = 'round';
         context.strokeStyle = '#000000';
+        
+        // Fill with white background initially
+        context.fillStyle = 'white';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        
         setCtx(context);
       }
     }
@@ -90,13 +95,15 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ onCapture }) => {
   // Clear the canvas
   const clearCanvas = () => {
     if (ctx && canvasRef.current) {
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      // Fill with white instead of clearing to transparent
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     }
   };
 
   // Capture canvas content as image
   const handleCapture = () => {
-    if (canvasRef.current) {
+    if (canvasRef.current && ctx) {
       const imageData = canvasRef.current.toDataURL('image/png');
       onCapture(imageData);
       clearCanvas();
