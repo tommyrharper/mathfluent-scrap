@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 // API base URL - use environment variable or default to localhost:8000
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-export default function Home() {
+export default function Questions() {
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,20 +42,23 @@ export default function Home() {
       const data = await response.json();
       console.log('Response data:', data);
       
-      // Store answer and result
-      setAnswers([...answers, imageData]);
-      setCorrectAnswers([...correctAnswers, data.correct]);
+      // Store answer and correctness from API response
+      const newAnswers = [...answers, imageData];
+      const newCorrectAnswers = [...correctAnswers, data.is_correct];
+      
+      setAnswers(newAnswers);
+      setCorrectAnswers(newCorrectAnswers);
       
       if (questionIndex < questions.length - 1) {
         setQuestionIndex(questionIndex + 1);
       } else {
-        // Navigate to review page with answers
+        // Navigate to review page with answers and correctness data
         router.push({
           pathname: '/review',
           query: {
             questions: questions,
-            answers: [...answers, imageData],
-            isCorrect: [...correctAnswers, data.correct]
+            answers: newAnswers,
+            isCorrect: newCorrectAnswers
           }
         });
       }
@@ -69,8 +72,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>MathFluent</title>
-        <meta name="description" content="A responsive math learning application" />
+        <title>MathFluent - Practice</title>
+        <meta name="description" content="Practice math problems" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
