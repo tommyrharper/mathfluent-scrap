@@ -4,7 +4,7 @@ Create a clean, minimal full-stack app (Next.js + FastAPI) with industry best pr
 
 # Overview & Goals
 
-- A responsive “Question → Review → Complete” workflow for math questions.
+- A responsive “Question 1 → Question 2" workflow for math questions.
 - Store and validate drawings (canvas base64) in a mock correctness flow.
 - Future-proof design for potential database/auth integrations.
 
@@ -23,7 +23,6 @@ Maintain the following structure in the README.md file:
 
 - **Next.js** PWA with TypeScript.
 - **Tailwind CSS** for styling (modern, responsive design).
-- **excalidraw** for canvas drawing.
 - **React Query** for API state management.
 - **Jest** + **React Testing Library** for unit tests.
 - **Docker**:
@@ -42,29 +41,13 @@ Maintain the following structure in the README.md file:
 
 1. Display `sin(2θ) = ?` centered using KaTeX.
 2. Canvas:
-   - Allow drawing with adjustable brush size/color.
+   - Allow drawing the response on the page using a canvas.
    - Save drawings as base64 PNG in React state.
 3. Submit Button:
    - POST image to `/api/check-answer` (mock correctness: `true`).
    - Handle loading/error states.
 4. Dynamic Questions:
    - After submission, show `cos(2θ) = ?` (hardcoded for now).
-
-### Review Page
-
-1. Table:
-   - Columns: Question | Answer (thumbnail) | Correct | Confirm Toggle.
-   - Toggle Logic: Invert `Correct` value when confirm is off.
-
-2. Complete Button:
-   - POST to `/api/submit-results` with payload:
-     ```json
-     {
-       "questions": ["sin(2θ) = ?", ...],
-       "answers": ["base64-img1", ...],
-       "is_correct": [true, ...] // Adjusted by toggles
-     }
-     ```
 
 # Backend
 
@@ -83,10 +66,6 @@ Maintain the following structure in the README.md file:
 1. `/check-answer` (POST):
    - Accept image (base64).
    - Return `{ "is_correct": true }` (mock logic).
-2. `/submit-results` (POST):
-   - Validate payload.
-   - Simulate Hugging Face upload (log to console).
-   - (Future) Add auth headers for Hugging Face API.
 
 ## Security
 
