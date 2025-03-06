@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import os
 import logging
 from dotenv import load_dotenv
+import random
 
 # Load environment variables
 load_dotenv()
@@ -62,7 +63,7 @@ async def check_answer(request: ImageRequest):
     logger.info(f"Image data length: {len(request.image) if request.image else 0} characters")
     
     # Always return true for the mock implementation
-    return AnswerResponse(is_correct=True)
+    return AnswerResponse(is_correct=random.choice([True, False]))
 
 @app.post("/submit-results")
 async def submit_results(request: SubmitResultsRequest):
