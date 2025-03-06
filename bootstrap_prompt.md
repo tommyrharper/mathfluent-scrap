@@ -4,7 +4,7 @@ Create a clean, minimal full-stack app (Next.js + FastAPI) with industry best pr
 
 # Overview & Goals
 
-- A responsive “Question 1 → Question 2" workflow for math questions.
+- A responsive "Question 1 → Question 2" workflow for math questions.
 - Store and validate drawings (canvas base64) in a mock correctness flow.
 - Future-proof design for potential database/auth integrations.
 

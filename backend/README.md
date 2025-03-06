@@ -9,14 +9,16 @@ This project uses UV for Python package management.
 ### Prerequisites
 
 - Python 3.10
-- UV (`pip install uv`)
+- UV (`pip install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh`)
 
 ### Installation
 
 1. Clone the repository
-2. Install dependencies:
+2. Set up a virtual environment and install dependencies with UV:
    ```bash
+   cd backend
    uv sync
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 ### Running the server
@@ -26,6 +28,21 @@ uvicorn app.main:app --reload
 ```
 
 The API will be available at http://localhost:8000/
+
+### Adding New Dependencies
+
+To add new dependencies with UV:
+
+```bash
+uv add package_name
+```
+
+To update the pyproject.toml file after adding dependencies:
+
+```bash
+uv lock
+uv sync
+```
 
 ### API Documentation
 

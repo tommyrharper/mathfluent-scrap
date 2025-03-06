@@ -31,10 +31,14 @@ MathFluent is a full-stack application built with Next.js and FastAPI that allow
    ```
    Frontend will be available at http://localhost:3000
 
-2. **Backend**:
+2. **Backend** (using UV):
    ```bash
    cd backend
-   python -m pip install -e .
+   # Create and activate virtual environment
+   uv sync
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   # Install dependencies
+   # Run the server
    uvicorn app.main:app --reload
    ```
    Backend will be available at http://localhost:8000
