@@ -89,34 +89,13 @@ export default function Questions() {
       </Head>
 
       <div className="relative h-screen w-screen">
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold text-center">
-            Question {questionIndex + 1}
-          </h2>
-          <div className="text-2xl mt-2">
-            <InlineMath math={questions[questionIndex]} />
-          </div>
-          <div className="flex mt-4 space-x-4 justify-center">
-            <button
-              onClick={clearCanvas}
-              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-              disabled={isSubmitting}
-            >
-              Clear
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </button>
-          </div>
-        </div>
         <DrawingCanvas
           ref={canvasRef}
           onCapture={handleImageCapture}
           onClear={clearCanvas}
+          question={questions[questionIndex]}
+          questionNumber={questionIndex + 1}
+          isSubmitting={isSubmitting}
         />
       </div>
     </>
