@@ -52,8 +52,10 @@ export default function Questions() {
       
       if (questionIndex < questions.length - 1) {
         setQuestionIndex(questionIndex + 1);
+        // Only clear canvas when moving to next question
+        canvasRef.current?.clear();
       } else {
-        // Navigate to review page with answers and correctness data
+        // For the final question, navigate immediately without clearing
         router.push({
           pathname: '/review',
           query: {

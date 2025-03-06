@@ -11,13 +11,15 @@ interface DrawingCanvasProps {
 
 export interface DrawingCanvasRef {
   submit: () => void;
+  clear: () => void;
 }
 
 const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onCapture, onClear }, ref) => {
   const [excalidrawAPI, setExcalidrawAPI] = React.useState<ExcalidrawImperativeAPI | null>(null);
 
   useImperativeHandle(ref, () => ({
-    submit: handleCapture
+    submit: handleCapture,
+    clear: clearCanvas
   }));
 
   const clearCanvas = () => {
