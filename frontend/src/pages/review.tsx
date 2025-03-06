@@ -113,7 +113,7 @@ export default function Review() {
                         confirmations[index] ? "text-green-400" : "text-red-400"
                       }
                     >
-                      {confirmations[index] ? "✓" : "✗"}
+                      {confirmations[index] ? "✅" : "❌"}
                     </span>
                   </td>
                   <td className="p-4">
