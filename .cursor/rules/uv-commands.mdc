@@ -1,0 +1,75 @@
+---
+description: UV Command Usage Guidelines
+globs: *.py,pyproject.toml,requirements.txt,.python-version
+alwaysApply: true
+---
+# UV Command Usage Guidelines
+
+Rule for ensuring proper usage of UV commands in Python projects.
+
+<rule>
+name: uv_command_usage
+description: Guidelines for using UV commands correctly
+
+filters:
+  - type: file_extension
+    pattern: "\\.py$"
+  - type: file_name
+    pattern: "pyproject\\.toml|requirements\\.txt|\\.python-version"
+  - type: content
+    pattern: "uv"
+
+actions:
+  - type: suggest
+    message: |
+      ## Correct UV Commands
+
+      UV is a modern Python package manager with its own command structure. Always use the native UV commands:
+
+      ### Project Management
+      - `uv init` - Initialize a new project
+      - `uv add package_name` - Add a package to dependencies
+      - `uv lock` - Generate a lockfile from dependencies
+      - `uv sync` - Install dependencies from the lockfile
+
+      ### Virtual Environments
+      - `uv venv` - Create a virtual environment (without additional arguments)
+      - `source .venv/bin/activate` - Activate the environment
+
+      ### Running Code
+      - `uv run script.py` - Run a script with its dependencies
+
+      ### Tools
+      - `uv tool run tool_name` - Run a tool in an ephemeral environment
+      - `uv tool install tool_name` - Install a tool
+
+      ### Python Versions
+      - `uv python install 3.10` - Install Python version
+      - `uv python pin 3.10` - Pin Python version
+
+      ### INCORRECT USAGE (NEVER USE)
+      - ❌ `uv pip install -e .` - Mixing UV with pip-style commands
+      - ❌ `uv venv .venv` - Specifying path argument to venv
+      - ❌ `uv install` - Non-existent command
+
+      For pip compatibility layer, use `uv pip` explicitly and only when needed:
+      - `uv pip compile requirements.in`
+      - `uv pip sync requirements.txt`
+
+examples:
+  - input: |
+      # Bad: Mixing UV with pip-style commands
+      uv pip install -e .
+      uv venv .venv
+      
+      # Good: Using proper UV commands
+      uv add package_name
+      uv lock
+      uv sync
+      uv venv
+    output: "Correctly using UV commands"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>
