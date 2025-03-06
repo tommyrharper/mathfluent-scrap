@@ -4,6 +4,7 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import { Excalidraw, MainMenu, exportToBlob } from "@excalidraw/excalidraw";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 import { InlineMath } from "react-katex";
+import { useRouter } from "next/router";
 
 interface DrawingCanvasProps {
   onCapture: (imageData: string) => void;
@@ -20,6 +21,7 @@ export interface DrawingCanvasRef {
 
 const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
   ({ onCapture, onClear, question, questionNumber, isSubmitting }, ref) => {
+    const router = useRouter();
     const [excalidrawAPI, setExcalidrawAPI] =
       React.useState<ExcalidrawImperativeAPI | null>(null);
 
@@ -67,8 +69,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
           excalidrawAPI={(api) => {
             setExcalidrawAPI(api);
             api.setActiveTool({ 
-              type: "freedraw", 
-              locked: true
+              type: "freedraw"
             });
           }}
           initialData={{
@@ -78,8 +79,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
               currentItemStrokeColor: "#000000",
               currentItemStrokeWidth: 2,
               activeTool: { 
-                type: "freedraw", 
-                locked: true
+                type: "freedraw"
               },
             },
           }}
@@ -97,6 +97,11 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
             },
           }}
         >
+          <MainMenu>
+            <MainMenu.Item onSelect={() => router.push("/")}>
+              Back to Home
+            </MainMenu.Item>
+          </MainMenu>
           <div className="absolute top-28 left-1/2 transform -translate-x-1/2 z-10 bg-zinc-900/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg border border-zinc-800">
             <h2 className="text-xl font-semibold text-center text-zinc-100">
               Question {questionNumber}
