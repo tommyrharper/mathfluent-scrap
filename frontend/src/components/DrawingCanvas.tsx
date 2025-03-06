@@ -50,6 +50,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ onCapture }) => {
             appState: {
               viewBackgroundColor: '#ffffff',
               theme: 'light',
+              activeTool: { type: "freedraw" }
             },
           }}
           UIOptions={{
