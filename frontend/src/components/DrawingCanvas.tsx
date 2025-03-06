@@ -97,7 +97,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
             },
           }}
         >
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg">
+          <div className="absolute top-28 left-1/2 transform -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold text-center">
               Question {questionNumber}
             </h2>
