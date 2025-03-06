@@ -74,14 +74,9 @@ export default function Home() {
             <InlineMath math={questions[questionIndex]} />
           </div>
           
-          <p className="mb-4 text-gray-600">Draw your answer below:</p>
-          
           <DrawingCanvas onCapture={handleImageCapture} />
         </div>
-        
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>Write your answer as clearly as possible.</p>
-        </div>
+
       </main>
     </>
   );
