@@ -84,20 +84,18 @@ async def check_answer(request: ImageRequest):
     Uses Claude as primary model, falls back to OpenAI if Claude fails.
     """
     logger.info("Received answer check request")
-    logger.info(
-        f"Image data length: {len(request.image) if request.image else 0} characters"
-    )
+    logger.info(f"Image data length: {len(request.image) if request.image else 0} characters")
 
     try:
         # Try Claude first
         try:
             result = await llm.query_claude_vision_one_shot(
-                request.image, request.question
+                request.question, request.image
             )
         except Exception as e:
             logger.warning(f"Claude query failed, falling back to OpenAI: {str(e)}")
             result = await llm.query_openai_vision_one_shot(
-                request.image, request.question
+                request.question, request.image
             )
 
         logger.info(f"Model response: {result}")
