@@ -91,10 +91,10 @@ async def check_answer(request: ImageRequest):
     try:
         # Try Claude first
         try:
-            result = await llm.query_claude_vision(request.image, request.question)
+            result = await llm.query_claude_vision_one_shot(request.image, request.question)
         except Exception as e:
             logger.warning(f"Claude query failed, falling back to OpenAI: {str(e)}")
-            result = await llm.query_openai_vision(request.image, request.question)
+            result = await llm.query_openai_vision_one_shot(request.image, request.question)
 
         logger.info(f"Model response: {result}")
         is_correct = result == "1"

@@ -4,12 +4,33 @@ from anthropic import Anthropic
 
 
 class LLM:
-    def __init__(self, logger: Logger, openai_client: OpenAI, anthropic_client: Anthropic):
+    def __init__(
+        self, logger: Logger, openai_client: OpenAI, anthropic_client: Anthropic
+    ):
         self.logger = logger
         self.openai_client = openai_client
         self.anthropic_client = anthropic_client
 
-    async def query_openai_vision(self, image: str, question: str) -> str:
+    async def query_openai_vision_one_shot(self, image: str, question: str) -> str:
+        """
+        Query OpenAI's vision model to check a handwritten math answer.
+        Returns "1" for correct answers and "0" for incorrect answers.
+        """
+        self.logger.info("Querying OpenAI vision model with one-shot prompt")
+        text = f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters."
+        self.query_openai_vision(image, text)
+
+    async def query_claude_vision_one_shot(self, image: str, question: str) -> str:
+        """
+        Query Claude 3.7 Sonnet to check a handwritten math answer.
+        Returns "1" for correct answers and "0" for incorrect answers.
+        """
+        self.logger.info("Querying Claude vision model with one-shot prompt")
+        system = 'Instruction to Claude: Your response must be only 0 or 1, with no additional text. Below are examples to illustrate the expected output:\n\nExample 1:\n\nInput:\nPrompt: "For the math question 2 + 2, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "4")\nExpected Output:\n1\nExample 2:\n\nInput:\nPrompt: "For the math question 5 × 3, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "20")\nExpected Output:\n0\nExample 3:\n\nInput:\nPrompt: "For the math question √16, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "5")\nExpected Output:\n0\nExample 4:\n\nInput:\nPrompt: "For the math question 10 ÷ 2, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "5")\nExpected Output:\n1\nFinal Clarification:\nClaude, your response must be either 0 or 1 with no extra text. Do not explain, do not add words, do not format the response in any way—just return 0 or 1.'
+        text = f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters."
+        self.query_claude_vision(image, text, system)
+
+    async def query_openai_vision(self, image: str, text: str) -> str:
         """
         Query OpenAI's vision model to check a handwritten math answer.
         Returns "1" for correct answers and "0" for incorrect answers.
@@ -27,7 +48,7 @@ class LLM:
                             },
                             {
                                 "type": "text",
-                                "text": f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters.",
+                                "text": text,
                             },
                         ],
                     }
@@ -39,8 +60,7 @@ class LLM:
             self.logger.error(f"Error in OpenAI vision query: {str(e)}")
             raise
 
-
-    async def query_claude_vision(self, image: str, question: str) -> str:
+    async def query_claude_vision(self, image: str, text: str, system: str) -> str:
         """
         Query Claude 3.7 Sonnet to check a handwritten math answer.
         Returns "1" for correct answers and "0" for incorrect answers.
@@ -55,7 +75,7 @@ class LLM:
             response = self.anthropic_client.messages.create(
                 model="claude-3-7-sonnet-20250219",
                 max_tokens=10,
-                system='Instruction to Claude: Your response must be only 0 or 1, with no additional text. Below are examples to illustrate the expected output:\n\nExample 1:\n\nInput:\nPrompt: "For the math question 2 + 2, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "4")\nExpected Output:\n1\nExample 2:\n\nInput:\nPrompt: "For the math question 5 × 3, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "20")\nExpected Output:\n0\nExample 3:\n\nInput:\nPrompt: "For the math question √16, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "5")\nExpected Output:\n0\nExample 4:\n\nInput:\nPrompt: "For the math question 10 ÷ 2, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "5")\nExpected Output:\n1\nFinal Clarification:\nClaude, your response must be either 0 or 1 with no extra text. Do not explain, do not add words, do not format the response in any way—just return 0 or 1.',
+                system=system,
                 messages=[
                     {
                         "role": "user",
@@ -70,7 +90,7 @@ class LLM:
                             },
                             {
                                 "type": "text",
-                                "text": f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters.",
+                                "text": text,
                             },
                         ],
                     }
