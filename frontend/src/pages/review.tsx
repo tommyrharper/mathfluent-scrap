@@ -5,6 +5,8 @@ import { BackgroundLines } from "@/components/ui/background-lines";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import { useAnswerStore } from "@/store/useAnswerStore";
+import { InlineMath } from "react-katex";
+import "katex/dist/katex.min.css";
 
 export default function Review() {
   const router = useRouter();
@@ -76,7 +78,9 @@ export default function Review() {
             <tbody>
               {questions.map((question, index) => (
                 <tr key={index} className="border-t border-zinc-800">
-                  <td className="p-4 text-zinc-100">{question}</td>
+                  <td className="p-4 text-zinc-100">
+                    <InlineMath math={question} />
+                  </td>
                   <td className="p-4">
                     <img
                       src={answers[index]}
