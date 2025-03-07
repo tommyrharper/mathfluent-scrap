@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     build:
@@ -12,7 +10,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://65.109.80.113:8000
     depends_on:
       - backend
 
@@ -26,4 +24,7 @@ services:
       - ./backend:/app
     environment:
       - ENVIRONMENT=development
-      - HF_TOKEN=${HF_TOKEN:-dummy_token} 
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy_token}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-dummy_token}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN:-dummy_token}
+      - SAVE_DATASET=${SAVE_DATASET:-False}
