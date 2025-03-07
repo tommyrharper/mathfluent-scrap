@@ -62,7 +62,7 @@ class LLM:
         self,
         text: str,
         image: str | None = None,
-        system: str | None = None,
+        system: str = 'Be very concise',
         max_tokens: int = 10,
     ) -> str:
         """
@@ -100,3 +100,32 @@ class LLM:
         except Exception as e:
             self.logger.error(f"Error in Claude vision query: {str(e)}")
             raise
+
+    async def query_claude_for_analysis_gpt_for_decision(self, question: str, image: str) -> str:
+        """
+        Two-step process:
+        1. Get Claude to analyze the answer
+        2. Have GPT-4 convert that analysis into a binary decision
+        """
+        self.logger.info("Starting two-step analysis with Claude and GPT-4")
+        analysis = await self.query_claude_analysis(question, image)
+        self.logger.info(f"Claude analysis: {analysis}")
+        return await self.query_openai_for_decision(analysis)
+
+    async def query_claude_analysis(self, question: str, image: str) -> str:
+        """
+        Query Claude to analyze whether the handwritten answer is correct.
+        Returns a natural language analysis.
+        """
+        self.logger.info("Querying Claude for detailed analysis")
+        text = f"For the math question '{question}', tell me whether the answer in the image is correct or incorrect. Be very concise and to the point. Use the minimum amount of words possible."
+        return await self.query_claude_vision(text, image, max_tokens=1000)
+
+    async def query_openai_for_decision(self, analysis: str) -> str:
+        """
+        Query GPT-4 to convert Claude's analysis into a binary decision.
+        Returns "1" for correct answers and "0" for incorrect answers.
+        """
+        self.logger.info("Querying GPT-4 to convert analysis to decision")
+        text = f"My teacher has marked my math question. He has marked it as follows: {analysis}. I need you to distill his response into a single number. If he has marked my answer as correct, return 1, otherwise return 0. Return no other characters."
+        return await self.query_openai_vision(text)
