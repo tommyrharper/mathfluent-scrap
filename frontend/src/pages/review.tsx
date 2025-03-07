@@ -12,6 +12,7 @@ export default function Review() {
     questions,
     answers,
     confirmations,
+    analyses,
     isSubmitting,
     toggleConfirmation,
     setIsSubmitting
@@ -58,7 +59,7 @@ export default function Review() {
       </Head>
 
       <BackgroundLines className="relative">
-        <div className="z-10 max-w-4xl mx-auto py-8 px-4">
+        <div className="z-10 max-w-5xl mx-auto py-8 px-4">
           <h2 className="bg-clip-text text-transparent text-center bg-gradient-to-b from-neutral-600 to-white text-4xl font-sans py-10 relative z-20 font-bold tracking-tight">
             Review Your Answers
           </h2>
@@ -69,6 +70,7 @@ export default function Review() {
                 <th className="text-left p-4 text-zinc-100">Answer</th>
                 <th className="text-left p-4 text-zinc-100">Correct</th>
                 <th className="text-left p-4 text-zinc-100">Confirm</th>
+                <th className="text-left p-4 text-zinc-100">Feedback</th>
               </tr>
             </thead>
             <tbody>
@@ -102,6 +104,15 @@ export default function Review() {
                       setChecked={() => toggleConfirmation(index)}
                       disabled={isSubmitting || confirmations[index] === null}
                     />
+                  </td>
+                  <td className="p-4 text-zinc-100">
+                    {analyses[index] === null ? (
+                      <span className="text-yellow-400">Waiting...</span>
+                    ) : (
+                      <div className="max-w-xs overflow-auto text-sm">
+                        {analyses[index]}
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

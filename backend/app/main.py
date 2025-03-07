@@ -46,6 +46,7 @@ class ImageRequest(BaseModel):
 
 class AnswerResponse(BaseModel):
     is_correct: bool
+    analysis: str
 
 
 class SubmitResultsRequest(BaseModel):
@@ -87,14 +88,13 @@ async def check_answer(request: ImageRequest):
     logger.info(f"Image data length: {len(request.image) if request.image else 0} characters")
 
     try:
-        result = await llm.query_claude_for_analysis_gpt_for_decision(
-            request.question, request.image
-        )
+        analysis = await llm.query_claude_analysis(request.question, request.image)
+        result = await llm.query_openai_for_decision(analysis)
 
         logger.info(f"Model response: {result}")
         is_correct = result == "1"
 
-        return AnswerResponse(is_correct=is_correct)
+        return AnswerResponse(is_correct=is_correct, analysis=analysis)
 
     except Exception as e:
         logger.error(f"Error checking answer: {str(e)}")

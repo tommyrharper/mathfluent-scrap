@@ -52,8 +52,8 @@ export default function Questions() {
       const data = await response.json();
       console.log("Response data:", data);
 
-      // Update correctness for this question
-      setCorrectAnswer(currentIndex, data.is_correct);
+      // Update correctness and analysis for this question
+      setCorrectAnswer(currentIndex, data.is_correct, data.analysis);
     } catch (error) {
       console.error("Error submitting answer:", error);
     }
