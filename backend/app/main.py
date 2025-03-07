@@ -116,6 +116,10 @@ async def submit_results(request: SubmitResultsRequest):
     logger.info(f"Number of answers: {len(request.answers)}")
     logger.info(f"Correctness: {request.is_correct}")
 
+    if os.getenv("SAVE_DATASET") != "True":
+        logger.info("Skipping dataset upload")
+        return {"message": "Uploading dataset skipped"}
+
     try:
         # Create a dataset dictionary
         dataset_dict = {
