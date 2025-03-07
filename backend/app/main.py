@@ -9,6 +9,7 @@ import base64
 from anthropic import Anthropic
 from datasets import Dataset
 from app.utils.LLM import LLM
+
 # Load environment variables
 load_dotenv()
 
@@ -76,7 +77,6 @@ async def read_root():
     return {"message": "Welcome to MathFluent API"}
 
 
-
 @app.post("/check-answer", response_model=AnswerResponse)
 async def check_answer(request: ImageRequest):
     """
@@ -91,10 +91,14 @@ async def check_answer(request: ImageRequest):
     try:
         # Try Claude first
         try:
-            result = await llm.query_claude_vision_one_shot(request.image, request.question)
+            result = await llm.query_claude_vision_one_shot(
+                request.image, request.question
+            )
         except Exception as e:
             logger.warning(f"Claude query failed, falling back to OpenAI: {str(e)}")
-            result = await llm.query_openai_vision_one_shot(request.image, request.question)
+            result = await llm.query_openai_vision_one_shot(
+                request.image, request.question
+            )
 
         logger.info(f"Model response: {result}")
         is_correct = result == "1"
@@ -127,20 +131,22 @@ async def submit_results(request: SubmitResultsRequest):
             "answers": request.answers,
             "is_correct": request.is_correct,
         }
-        
+
         # Create a Dataset object
         dataset = Dataset.from_dict(dataset_dict)
-        
+
         # Push to Hugging Face Hub
         dataset.push_to_hub(
             "zeroknowledgeltd/mathfluent",
             token=os.getenv("HUGGINGFACE_TOKEN"),
-            split="train"
+            split="train",
         )
-        
+
         logger.info("Successfully uploaded to Hugging Face dataset")
         return {"message": "Results submitted and uploaded successfully"}
-    
+
     except Exception as e:
         logger.error(f"Error uploading to Hugging Face: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error uploading results to dataset")
+        raise HTTPException(
+            status_code=500, detail="Error uploading results to dataset"
+        )

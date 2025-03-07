@@ -18,7 +18,7 @@ class LLM:
         """
         self.logger.info("Querying OpenAI vision model with one-shot prompt")
         text = f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters."
-        self.query_openai_vision(image, text)
+        return await self.query_openai_vision(image, text)
 
     async def query_claude_vision_one_shot(self, image: str, question: str) -> str:
         """
@@ -28,7 +28,7 @@ class LLM:
         self.logger.info("Querying Claude vision model with one-shot prompt")
         system = 'Instruction to Claude: Your response must be only 0 or 1, with no additional text. Below are examples to illustrate the expected output:\n\nExample 1:\n\nInput:\nPrompt: "For the math question 2 + 2, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "4")\nExpected Output:\n1\nExample 2:\n\nInput:\nPrompt: "For the math question 5 × 3, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "20")\nExpected Output:\n0\nExample 3:\n\nInput:\nPrompt: "For the math question √16, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "5")\nExpected Output:\n0\nExample 4:\n\nInput:\nPrompt: "For the math question 10 ÷ 2, analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0."\nImage: (Handwritten response: "5")\nExpected Output:\n1\nFinal Clarification:\nClaude, your response must be either 0 or 1 with no extra text. Do not explain, do not add words, do not format the response in any way—just return 0 or 1.'
         text = f"For the math question '{question}', analyze the handwritten answer in the image. If the answer is right, return 1, otherwise return 0. Return no other characters."
-        self.query_claude_vision(image, text, system)
+        return await self.query_claude_vision(image, text, system)
 
     async def query_openai_vision(self, image: str, text: str) -> str:
         """
